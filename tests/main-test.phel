@@ -1,0 +1,9 @@
+(ns grep\test\main-test
+  (:require phel\test :refer [deftest is])
+  (:require grep\main))
+
+(def *small-file* "./small.txt")
+
+(deftest small-text-simple-match
+  (let [result (main/grep "to" *small-file*)]
+    (is (= result 0))))

@@ -1,0 +1,6 @@
+Built on PHP Ecosystem
+Runs on the PHP ecosystem with access to all existing libraries
+
+* Seamless PHP interoperability
+* Access to Composer packages
+* Familiar deployment patterns
