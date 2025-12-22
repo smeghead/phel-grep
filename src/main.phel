@@ -9,10 +9,7 @@
         (cons line (stream-line-seq in-stream))))))
 
 (defn grep [regexp in-stream out-stream]
-  (loop [lines (stream-line-seq in-stream)]
-    (when (seq lines)
-      (let [line (first lines)]
-        (if (str/contains? line regexp)
-          (php/fwrite out-stream line))
-        (recur (rest lines)))))
+  (doseq [line :in (stream-line-seq in-stream)]
+    (if (str/contains? line regexp)
+      (php/fwrite out-stream line)))
   0)
