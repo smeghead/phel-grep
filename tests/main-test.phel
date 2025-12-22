@@ -2,8 +2,12 @@
   (:require phel\test :refer [deftest is])
   (:require grep\main))
 
-(def *small-file* "./small.txt")
-
 (deftest small-text-simple-match
-  (let [result (main/grep "to" *small-file*)]
-    (is (= result 0))))
+  (let [in-stream (php/fopen "./tests/small.txt" "r")
+        out-stream (php/fopen "php://memory" "w")
+        result (main/grep "to" in-stream out-stream)
+        _ (php/rewind out-stream)
+        stdout (php/stream_get_contents out-stream)]
+    (is (= 0 result))
+    (is (= stdout "Runs on the PHP ecosystem with access to all existing libraries\r\n* Access to Composer packages\r\n"))
+))

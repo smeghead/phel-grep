@@ -1,5 +1,18 @@
 (ns grep\main
+  (:require phel\str)
   )
 
-(defn grep [regexp filename]
-      0)
+(defn- stream-line-seq [in-stream]
+  (lazy-seq
+    (let [line (php/fgets in-stream)]
+      (when (not= false line)
+        (cons line (stream-line-seq in-stream))))))
+
+(defn grep [regexp in-stream out-stream]
+  (loop [lines (stream-line-seq in-stream)]
+    (when (seq lines)
+      (let [line (first lines)]
+        (if (str/contains? line regexp)
+          (php/fwrite out-stream line))
+        (recur (rest lines)))))
+  0)
