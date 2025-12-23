@@ -1,13 +1,14 @@
-(ns grep\test\main-test
+(ns tests\grep\main-test
   (:require phel\test :refer [deftest is])
-  (:require grep\main))
+  (:require grep\main)
+  (:require tests\grep\util))
 
 (deftest small-text-simple-match
-  (let [in-stream (php/fopen "./tests/small.txt" "r")
+  (let [in-stream (util/from-string util/small-text)
         out-stream (php/fopen "php://memory" "w")
         result (main/grep "to" in-stream out-stream)
         _ (php/rewind out-stream)
         stdout (php/stream_get_contents out-stream)]
     (is (= 0 result))
-    (is (= stdout "Runs on the PHP ecosystem with access to all existing libraries\r\n* Access to Composer packages\r\n"))
+    (is (= stdout "Runs on the PHP ecosystem with access to all existing libraries\n* Access to Composer packages\n"))
 ))

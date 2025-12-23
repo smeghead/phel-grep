@@ -1,10 +1,11 @@
-(ns grep\modules\input-test
+(ns tests\grep\modules\input-test
   (:require grep\modules\input)
+  (:require tests\grep\util)
   (:require phel\test :refer [deftest is]))
 
 (deftest convert-stream-to-lazy-sequence
-  (let [in-stream (php/fopen "./tests/small.txt" "r")
+  (let [in-stream (util/from-string util/small-text)
         out-stream (php/fopen "php://memory" "w")
         results (doall (input/stream-line-seq in-stream))]
     (is (= (count results)) 6)
-    (is (= (results 0) "Built on PHP Ecosystem\r\n"))))
+    (is (= (results 0) "Built on PHP Ecosystem\n"))))

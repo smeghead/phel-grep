@@ -3,7 +3,6 @@
   (:require grep\modules\input)
   )
 
-
 (defn grep [regexp in-stream out-stream]
   (doseq [line :in (input/stream-line-seq in-stream)]
     (if (str/contains? line regexp)

@@ -1,0 +1,14 @@
+(ns tests\grep\util)
+
+(defn from-string [s]
+  (let [in (php/fopen "php://memory" "r+")]
+    (php/fwrite in s)
+    (php/rewind in)
+    in))
+
+(def small-text "Built on PHP Ecosystem
+Runs on the PHP ecosystem with access to all existing libraries
+
+* Seamless PHP interoperability
+* Access to Composer packages
+* Familiar deployment patterns")
