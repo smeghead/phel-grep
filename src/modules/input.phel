@@ -1,0 +1,8 @@
+(ns grep\modules\input)
+
+(defn stream-line-seq [in-stream]
+  (lazy-seq
+    (let [line (php/fgets in-stream)]
+      (when (not= false line)
+        (cons line (stream-line-seq in-stream))))))
+

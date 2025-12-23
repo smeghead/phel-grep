@@ -1,15 +1,11 @@
 (ns grep\main
   (:require phel\str)
+  (:require grep\modules\input)
   )
 
-(defn- stream-line-seq [in-stream]
-  (lazy-seq
-    (let [line (php/fgets in-stream)]
-      (when (not= false line)
-        (cons line (stream-line-seq in-stream))))))
 
 (defn grep [regexp in-stream out-stream]
-  (doseq [line :in (stream-line-seq in-stream)]
+  (doseq [line :in (input/stream-line-seq in-stream)]
     (if (str/contains? line regexp)
       (php/fwrite out-stream line)))
   0)
