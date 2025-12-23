@@ -1,10 +1,9 @@
 (ns grep\main
-  (:require phel\str)
   (:require grep\modules\input)
-  )
+  (:require grep\modules\matcher))
 
 (defn grep [regexp in-stream out-stream]
   (doseq [line :in (input/stream-line-seq in-stream)]
-    (if (str/contains? line regexp)
+    (if (matcher/match line regexp)
       (php/fwrite out-stream line)))
   0)

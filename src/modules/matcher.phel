@@ -1,0 +1,5 @@
+(ns grep\modules\matcher
+  (:require phel\str))
+
+(defn match [string needle]
+  (str/contains? string needle))

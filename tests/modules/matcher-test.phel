@@ -1,0 +1,7 @@
+(ns tests\grep\modules\matcher-test
+  (:require grep\modules\matcher)
+  (:require tests\grep\util)
+  (:require phel\test :refer [deftest is]))
+
+(deftest simple-match
+  (is (= (matcher/match "abcdefg" "cd") true)))
