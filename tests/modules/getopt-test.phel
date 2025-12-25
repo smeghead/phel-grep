@@ -1,0 +1,23 @@
+(ns tests\grep\modules\getopt-test
+  (:require grep\modules\getopt)
+  (:require phel\test :refer [deftest is]))
+
+(deftest run-as-script-no-argv
+  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel")]
+    (is (= (result :args) []))
+    (is (= (result :options) {}))))
+
+(deftest run-as-namespace-no-argv
+  (let [result (getopt/getopt "vendor/bin/phel run grep\main")]
+    (is (= (result :args) []))
+    (is (= (result :options) {}))))
+
+(deftest run-as-php-no-argv
+  (let [result (getopt/getopt "out/main.php")]
+    (is (= (result :args) []))
+    (is (= (result :options) {}))))
+
+(deftest run-as-script-2-arguments
+  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel one two")]
+    (is (= (result :args) ["one" "two"]))
+    (is (= (result :options) {}))))

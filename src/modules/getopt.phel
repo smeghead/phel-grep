@@ -1,0 +1,8 @@
+(ns grep\modules\getopt
+  )
+
+(defstruct Result [args options])
+
+(defn getopt [raw-args]
+  (Result [] {})
+  )
