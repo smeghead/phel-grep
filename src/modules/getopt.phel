@@ -1,8 +1,15 @@
 (ns grep\modules\getopt
+  (:require phel\str)
   )
 
 (defstruct Result [args options])
 
-(defn getopt [raw-args]
-  (Result [] {})
-  )
+(defn getopt [raw-args entrypoint ns]
+  (let [entrypoint-basename (php/basename entrypoint)
+        args (str/split raw-args "/\s+/")
+        index (find-index |(str/contains? $ entrypoint-basename) args)
+#        _ (println args)
+#        _ (println entrypoint-basename)
+#        _ (println index)
+        phel-args (if (nil? index) [] (slice args (inc index)))]
+    (Result phel-args {})))

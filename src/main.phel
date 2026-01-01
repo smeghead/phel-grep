@@ -1,4 +1,5 @@
 (ns grep\main
+  (:require phel\str)
   (:require grep\modules\input)
   (:require grep\modules\matcher))
 
@@ -7,3 +8,17 @@
     (if (matcher/match line regexp)
       (php/fwrite out-stream line)))
   0)
+
+(defn getopt [global]
+  (let [arguments (php->phel (php/aget global "argv"))
+        self "main.phel"
+        index (find-index |(str/contains? $ self) arguments)
+]
+    (println arguments)
+    (println self)
+    (println index)
+    #(slice arguments index)
+))
+    
+(println (getopt php/$_SERVER))
+#(def needle 

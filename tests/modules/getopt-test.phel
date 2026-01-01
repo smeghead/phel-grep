@@ -3,21 +3,21 @@
   (:require phel\test :refer [deftest is]))
 
 (deftest run-as-script-no-argv
-  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel")]
+  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel" "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-namespace-no-argv
-  (let [result (getopt/getopt "vendor/bin/phel run grep\main")]
+  (let [result (getopt/getopt "vendor/bin/phel run grep\main" "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-php-no-argv
-  (let [result (getopt/getopt "out/main.php")]
+  (let [result (getopt/getopt "out/main.php" "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-script-2-arguments
-  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel one two")]
+  (let [result (getopt/getopt "vendor/bin/phel run src/main.phel one two" "/app/src/main.phel" "grep\main")]
     (is (= (result :args) ["one" "two"]))
     (is (= (result :options) {}))))

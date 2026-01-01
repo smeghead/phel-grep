@@ -9,6 +9,8 @@
         result (main/grep "to" in-stream out-stream)
         _ (php/rewind out-stream)
         stdout (php/stream_get_contents out-stream)]
+    (println *file*)
+    (println *ns*)
     (is (= 0 result))
     (is (= stdout "Runs on the PHP ecosystem with access to all existing libraries\n* Access to Composer packages\n"))
 ))
