@@ -15,9 +15,8 @@
       (not (nil? php-index)) php-index
       nil)))
 
-(defn getopt [raw-args entrypoint ns]
+(defn getopt [args entrypoint ns]
   (let [entrypoint-basename (php/basename entrypoint)
-        args (str/split raw-args "/\s+/")
         phel-index (phel-index args entrypoint-basename ns)
 #        _ (println args)
 #        _ (println entrypoint-basename)
