@@ -1,5 +1,7 @@
 (ns grep\modules\input)
 
+# already not used file.
+
 (defn stream-line-seq [in-stream]
   (lazy-seq
     (let [line (php/fgets in-stream)]
