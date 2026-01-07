@@ -15,26 +15,37 @@
     (is (= result 1))))
 
 (deftest run-as-script-no-argv
-  (let [result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel"] "/app/src/main.phel" "grep\main")]
+  (let [options []
+        result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-namespace-no-argv
-  (let [result (getopt/getopt ["vendor/bin/phel" "run" "grep\main"] "/app/src/main.phel" "grep\main")]
+  (let [options []
+        result (getopt/getopt ["vendor/bin/phel" "run" "grep\main"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-php-no-argv
-  (let [result (getopt/getopt ["out/main.php"] "/app/src/main.phel" "grep\main")]
+  (let [options []
+        result (getopt/getopt ["out/main.php"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) []))
     (is (= (result :options) {}))))
 
 (deftest run-as-script-2-arguments
-  (let [result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel" "one" "two"] "/app/src/main.phel" "grep\main")]
+  (let [options []
+        result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel" "one" "two"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) ["one" "two"]))
     (is (= (result :options) {}))))
 
 (deftest run-as-namespace-2-arguments
-  (let [result (getopt/getopt ["vendor/bin/phel" "run" "grep\main" "one" "two"] "/app/src/main.phel" "grep\main")]
+  (let [options []
+        result (getopt/getopt ["vendor/bin/phel" "run" "grep\main" "one" "two"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) ["one" "two"]))
     (is (= (result :options) {}))))
+
+(deftest option-short-options
+  (let [options ["-a"]
+        result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel" "-a" "one" "two"] options "/app/src/main.phel" "grep\main")]
+    (is (= (result :args) ["one" "two"]))
+    (is (= (result :options) {:a true}))))

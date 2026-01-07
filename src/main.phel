@@ -29,7 +29,7 @@
 
   0)
 
-(def options (getopt/getopt argv *file* *ns*))
+(def options (getopt/getopt argv [] *file* *ns*))
 
 (defn usage []
   (php/fwrite php/STDERR "usage: phel run src/main.phel <regexp> <file>\n"))

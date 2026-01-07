@@ -15,11 +15,26 @@
       (not (nil? php-index)) php-index
       nil)))
 
-(defn getopt [args entrypoint ns]
+(defn- gen-result [phel-args options]
+  (loop [rest-args phel-args
+         args []
+         opts {}]
+    (if (empty? rest-args)
+      (Result args opts)   
+      (let [current-arg (first rest-args)
+            no-value-option (contains-value? options current-arg)
+            value-option (contains-value? options (str current-arg ":"))
+            current-arg-keyword (keyword (str/replace current-arg "/[-:]/" ""))]
+        (cond
+          no-value-option (recur (rest rest-args) args (assoc opts current-arg-keyword true))
+          value-option (recur (rest (rest rest-args)) args (assoc opts current-arg-keyword (second rest-args)))
+          (recur (rest rest-args) (conj args current-arg) opts))))))
+
+(defn getopt [args options entrypoint ns]
   (let [entrypoint-basename (php/basename entrypoint)
         phel-index (phel-index args entrypoint-basename ns)
 #        _ (println args)
 #        _ (println entrypoint-basename)
 #        _ (println index)
         phel-args (if (nil? phel-index) [] (slice args (inc phel-index)))]
-    (Result phel-args {})))
+    (gen-result phel-args options)))
