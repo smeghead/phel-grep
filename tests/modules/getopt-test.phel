@@ -67,3 +67,9 @@
         result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel" "--unknown" "one" "two"] options "/app/src/main.phel" "grep\main")]
     (is (= (result :args) ["one" "two"]))
     (is (= (result :options) {}))))
+
+(deftest option-give-up-parse-after---
+  (let [options ["-a"]
+        result (getopt/getopt ["vendor/bin/phel" "run" "src/main.phel" "--" "-a" "one" "two"] options "/app/src/main.phel" "grep\main")]
+    (is (= (result :args) ["-a" "one" "two"]))
+    (is (= (result :options) {}))))

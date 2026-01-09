@@ -18,7 +18,8 @@
 (defn- gen-result [phel-args options]
   (loop [rest-args phel-args
          args []
-         opts {}]
+         opts {}
+         give-up-parse false]
     (if (empty? rest-args)
       (Result args opts)   
       (let [current-arg (first rest-args)
@@ -26,11 +27,25 @@
             value-option (contains-value? options (str current-arg ":"))
             current-arg-keyword (keyword (str/replace current-arg "/[-:]/" ""))]
         (cond
-          no-value-option (recur (rest rest-args) args (assoc opts current-arg-keyword true))
-          value-option (recur (rest (rest rest-args)) args (assoc opts current-arg-keyword (second rest-args)))
+          (= current-arg "--") (recur
+                                 (rest rest-args)
+                                 args
+                                 opts
+                                 true)
+          give-up-parse (recur (rest rest-args) (conj args current-arg) opts give-up-parse)
+          no-value-option (recur
+                            (rest rest-args)
+                            args
+                            (assoc opts current-arg-keyword true)
+                            give-up-parse)
+          value-option (recur
+                         (rest (rest rest-args))
+                         args
+                         (assoc opts current-arg-keyword (second rest-args))
+                         give-up-parse)
           (if (str/starts-with? current-arg "-")
-            (recur (rest rest-args) args opts) # - から始まっていた場合
-            (recur (rest rest-args) (conj args current-arg) opts)))))))
+            (recur (rest rest-args) args opts give-up-parse) # - から始まっていた場合
+            (recur (rest rest-args) (conj args current-arg) opts give-up-parse)))))))
 
 (defn getopt [args options entrypoint ns]
   (let [entrypoint-basename (php/basename entrypoint)
