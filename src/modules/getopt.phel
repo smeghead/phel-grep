@@ -28,7 +28,9 @@
         (cond
           no-value-option (recur (rest rest-args) args (assoc opts current-arg-keyword true))
           value-option (recur (rest (rest rest-args)) args (assoc opts current-arg-keyword (second rest-args)))
-          (recur (rest rest-args) (conj args current-arg) opts))))))
+          (if (str/starts-with? current-arg "-")
+            (recur (rest rest-args) args opts) # - から始まっていた場合
+            (recur (rest rest-args) (conj args current-arg) opts)))))))
 
 (defn getopt [args options entrypoint ns]
   (let [entrypoint-basename (php/basename entrypoint)
