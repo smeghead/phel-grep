@@ -8,7 +8,6 @@
         script-index (find-index |(str/contains? $ entrypoint-basename) args)
         namespace-index (find-index |(= $ ns) args)
         php-index (find-index |(str/contains? $ ".php") args)]
-#(println "run-index" run-index)
     (cond
       (and (not (nil? run-index)) (not (nil? script-index))) script-index
       (and (not (nil? run-index)) (not (nil? namespace-index))) namespace-index
@@ -18,8 +17,7 @@
 (defn- gen-result [phel-args options]
   (loop [rest-args phel-args
          args []
-         opts {}
-         give-up-parse false]
+         opts {}]
     (if (empty? rest-args)
       (Result args opts)   
       (let [current-arg (first rest-args)
@@ -28,30 +26,23 @@
             current-arg-keyword (keyword (str/replace current-arg "/[-:]/" ""))]
         (cond
           (= current-arg "--") (recur
-                                 (rest rest-args)
-                                 args
-                                 opts
-                                 true)
-          give-up-parse (recur (rest rest-args) (conj args current-arg) opts give-up-parse)
+                                 []
+                                 (concat args (rest rest-args))
+                                 opts)
           no-value-option (recur
                             (rest rest-args)
                             args
-                            (assoc opts current-arg-keyword true)
-                            give-up-parse)
+                            (assoc opts current-arg-keyword true))
           value-option (recur
                          (rest (rest rest-args))
                          args
-                         (assoc opts current-arg-keyword (second rest-args))
-                         give-up-parse)
+                         (assoc opts current-arg-keyword (second rest-args)))
           (if (str/starts-with? current-arg "-")
-            (recur (rest rest-args) args opts give-up-parse) # - から始まっていた場合
-            (recur (rest rest-args) (conj args current-arg) opts give-up-parse)))))))
+            (recur (rest rest-args) args opts) # - から始まっていた場合は current-arg を捨てる。
+            (recur (rest rest-args) (conj args current-arg) opts)))))))
 
 (defn getopt [args options entrypoint ns]
   (let [entrypoint-basename (php/basename entrypoint)
         phel-index (phel-index args entrypoint-basename ns)
-#        _ (println args)
-#        _ (println entrypoint-basename)
-#        _ (println index)
         phel-args (if (nil? phel-index) [] (slice args (inc phel-index)))]
     (gen-result phel-args options)))
