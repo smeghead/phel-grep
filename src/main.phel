@@ -1,6 +1,6 @@
 (ns grep\main
   (:require phel\str)
-  (:require grep\modules\getopt)
+  (:require smeghead\getopt\getopt)
 #  (:require grep\modules\input)
   (:require grep\modules\matcher))
 
