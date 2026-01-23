@@ -1,43 +1,27 @@
 (ns grep\main
   (:require phel\str)
   (:require smeghead\getopt\getopt)
-#  (:require grep\modules\input)
   (:require grep\modules\matcher))
 
 (defn grep [regexp in-stream out-stream]
-# 直接ストリームを扱う方式、LazySequenceを使ってない。
+  # 直接ストリームを扱う方式、LazySequenceを使ってない。
   (loop []  
     (let [line (php/fgets in-stream)]  
       (when (not= false line)  
         (when (matcher/match line regexp)  
           (php/fwrite out-stream line))
         (recur))))
-
-# doseqを使うと全部を展開してしまうので、巨大ファイルを扱うとメモリエラーが発生する。
-#  (doseq [line :in (input/stream-line-seq in-stream)]
-#    (if (matcher/match line regexp)
-#      (php/fwrite out-stream line)))
-
-# foreach
-# の場合は展開はしないけど、LazySeq自体のデータ構造がネストされたLazySeqとなるため
-# 大量の要素を扱うと線形にメモリが増加してしまう。
-# これは、LazySeqの弱点であるようです。LazySeqは綺麗にエンドレスのような配列要素を扱えるが
-# LazySeqを構築しても、展開する要素が多くなると消費メモリは線形に増加する。
-#  (foreach [line (input/stream-line-seq in-stream)]  
-#    (when (matcher/match line regexp)  
-#      (php/fwrite out-stream line)))  
-
   0)
 
-(def options (getopt/getopt argv [] *file* *ns*))
+(def options (getopt/getopt argv []))
 
 (defn usage []
   (php/fwrite php/STDERR "usage: phel run src/main.phel <regexp> <file>\n"))
 
 (let [[regex file] (options :args)]
   (cond
-    (nil? regex) (usage) 
-    (nil? file) (usage) 
+    (nil? regex) (usage)
+    (nil? file) (usage)
     (let [f (php/fopen file "r")]
       (try
         (grep regex f php/STDOUT)
